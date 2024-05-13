@@ -1,19 +1,24 @@
 import os
+
 from flask import Flask, jsonify, request
-import settings
+
+import settings  # noqa: F401  (loads .env before anything reads os.environ)
 from src.nlp import find_locations
 
 if os.getenv('SENTRY_DSN'):
     import sentry_sdk
     from sentry_sdk.integrations.flask import FlaskIntegration
+
     sentry_sdk.init(dsn=os.environ['SENTRY_DSN'], integrations=[FlaskIntegration()], send_default_pii=False)
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 128 * 1024
 
+
 @app.route('/')
 def index():
     return jsonify({'service': 'location extraction', 'endpoint': 'POST /find_locations'})
+
 
 @app.route('/find_locations', methods=['POST'])
 def route_find_locations():

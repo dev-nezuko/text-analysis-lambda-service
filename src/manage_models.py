@@ -1,14 +1,14 @@
 import argparse
-import os
-import tarfile
-import re
 import hashlib
+import os
+import re
+import tarfile
 from pathlib import Path
 
 import boto3
 import requests
 
-import settings
+import settings  # noqa: F401  (loads .env before the module-level lookups below)
 
 model = os.getenv('SPACY_MODEL_MEDIUM')
 model_sm = os.getenv('SPACY_MODEL_SMALL')
@@ -24,6 +24,7 @@ def makedir_if_not_exists(dest):
 def validate_model_name(model):
     if not isinstance(model, str) or not re.fullmatch(r'[A-Za-z0-9_]+-[0-9]+\.[0-9]+\.[0-9]+', model):
         raise ValueError('Use a versioned spaCy model name without path components.')
+
 
 def download_model_from_github(model: str, dest: str = '/tmp/models') -> str:
     validate_model_name(model)
@@ -42,7 +43,7 @@ def download_model_from_github(model: str, dest: str = '/tmp/models') -> str:
     unzip_file(filename, dest)
     uncompressed_file = os.path.join(Path(dest), model)
     print(f'Downloaded to {uncompressed_file}')
-    
+
     return uncompressed_file
 
 
@@ -79,7 +80,7 @@ def unzip_file(filename: str, dest: str):
     root = Path(dest).resolve()
     with tarfile.open(filename) as archive:
         members = archive.getmembers()
-        if len(members) > 10000 or sum(item.size for item in members) > 1024 ** 3:
+        if len(members) > 10000 or sum(item.size for item in members) > 1024**3:
             raise ValueError('Model archive exceeds extraction limits.')
         for member in members:
             if Path(member.name).is_absolute() or '..' in Path(member.name).parts:
@@ -118,7 +119,7 @@ def upload_model_to_s3(model: str, location: str = dest, s3_bucket: str = s3_buc
     print('Done')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Download Spacy models to disk and upload them to S3')
     parser.add_argument('--download', '-d', action='store_true')
     parser.add_argument('--upload', '-u', action='store_true')
