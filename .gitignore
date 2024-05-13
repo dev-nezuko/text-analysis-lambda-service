@@ -1,0 +1,32 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+project_venv/
+node_modules/
+
+# Python caches and build output
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+coverage/
+
+# Deployment tooling output
+.serverless/
+*.zip
+*.tar.gz
+
+# Logs and scratch
+*.log
+logs/
+tmp/
+.DS_Store
+.github/
