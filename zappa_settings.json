@@ -4,7 +4,7 @@
         "aws_region": "your-aws-region",
         "profile_name": "default",
         "project_name": "text-analysis-service",
-        "runtime": "python3.8",
+        "runtime": "python3.12",
         "s3_bucket": "your-zappa-deployments-bucket",
         "slim_handler": true,
         "keep_warm": true,
@@ -13,9 +13,20 @@
         "exclude": [
             "__pycache__",
             ".pytest_cache",
+            ".ruff_cache",
             ".vscode",
             "*.pyc",
-            "test/*"
-        ]
+            "test/*",
+            "Dockerfile",
+            ".dockerignore",
+            "*.tar.gz"
+        ],
+        "ephemeral_storage": {
+            "Size": 2048
+        },
+        "environment_variables": {
+            "SPACY_MODEL_MEDIUM": "en_core_web_md-3.8.0",
+            "S3_BUCKET": "your-model-bucket"
+        }
     }
 }
